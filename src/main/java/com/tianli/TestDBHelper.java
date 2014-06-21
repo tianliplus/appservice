@@ -25,7 +25,6 @@ public class TestDBHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// TODO Auto-generated method stub
 		db.execSQL(SQL_DELETE_ENTRIES);
 		onCreate(db);
 	}
