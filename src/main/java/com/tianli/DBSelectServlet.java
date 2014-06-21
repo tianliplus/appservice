@@ -40,9 +40,13 @@ public class DBSelectServlet extends HttpServlet {
 		String sortOrder = "id ASC";
 		Cursor cursor = db.query("testtable", projection, null, null, null,
 				null, sortOrder);
-		cursor.moveToFirst();
 		PrintWriter out = response.getWriter();
 		out.println("Work done!");
+		if (cursor.moveToFirst()) {
+			out.println("id : " + cursor.getInt(0) + ", content : "
+					+ cursor.getString(1));
+		}
+
 		while (cursor.moveToNext()) {
 			out.println("id : " + cursor.getInt(0) + ", content : "
 					+ cursor.getString(1));
