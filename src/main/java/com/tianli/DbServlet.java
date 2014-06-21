@@ -1,6 +1,7 @@
 package com.tianli;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -39,6 +40,10 @@ public class DbServlet extends HttpServlet {
 		values.put("content", request.getParameter("content"));
 		long newRowId;
 		newRowId = db.insert("testtable", "null", values);
+		PrintWriter out = response.getWriter();
+		out.println("Work done!");
+		out.println("id=" + newRowId + " inserted");
+		return;
 	}
 
 	/**
