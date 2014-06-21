@@ -32,6 +32,6 @@
   </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>DBSelectServlet</servlet-name>
-  	<url-pattern>/DBSelectServlet</url-pattern>
+  	<url-pattern>/query</url-pattern>
   </servlet-mapping>
 </web-app>
