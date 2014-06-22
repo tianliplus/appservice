@@ -40,39 +40,51 @@ public class LoginServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		LoginResult result = new LoginResult();
-		long rowId = 0;
 
+		// 获取数据库对象
 		Context androidContext = (Context) getServletContext().getAttribute(
 				"org.mortbay.ijetty.context");
 		LoginDBHelper mDbHelper = new LoginDBHelper(androidContext);
 		SQLiteDatabase db = mDbHelper.getWritableDatabase();
-		switch (Integer.parseInt(request.getParameter("action"))) {
-		case LOGIN_ACTION:
-			if (mDbHelper.getCount(db, "") <= 4) {
-				UserDO userDo = new UserDO();
-				userDo.userName = request.getParameter("username").trim();
-				userDo.seatId = Integer
-						.parseInt(request.getParameter("seatid"));
-				userDo.ip = request.getRemoteAddr().trim();
-				rowId = mDbHelper.insert(db, userDo);
-				if (rowId > 0) {
-					result.rowId = (int) rowId;
-					result.rcode = 1;
-					result.seatId = Integer.parseInt(request
-							.getParameter("seatid"));
-				}
+		// 获取用户信息
+		UserDO userDo = new UserDO();
+		userDo.userName = request.getParameter("username").trim();
+		userDo.seatId = Integer.parseInt(request.getParameter("seatid"));
+		userDo.ip = request.getRemoteAddr().trim();
+		// 获取座位用户信息
+		UserDO userAtSeatDo = mDbHelper.select(db, LoginDBHelper.SEAT_ID_COL
+				+ "=" + userDo.seatId);
+		String[] args = { userDo.userName };
+		// -----如果座位没有人-----
+		if (userAtSeatDo.id == -1) {
+			// 先删除该用户的原有记录
+			mDbHelper.delete(db, LoginDBHelper.USER_NAME_COL + " = ?", args);
+			// 再把该用户插入到seatId上
+			mDbHelper.insert(db, userDo);
+			result.rcode = 1;
+			result.actioncode = 1;
+			result.oldseat = userAtSeatDo.seatId;
+		} else {
+			// -----如果座位有人-----
+			// -----如果是本人-----
+			if (userDo.userName == userAtSeatDo.userName) {
+				mDbHelper.delete(db, LoginDBHelper.USER_NAME_COL + "=?", args);
+				result.rcode = 1;
+				result.actioncode = 2;
+			} else {
+				// 座位上是别人
+				// 返回錯誤
+				result.actioncode = 3;
+				result.rcode = -1;
 			}
-			break;
-		case LOGOUT_ACTION:
-
-			break;
 		}
 		Gson gson = new Gson();
-
 		PrintWriter out = response.getWriter();
 		out.println(gson.toJson(result));
 		return;
 	}
+
+
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse

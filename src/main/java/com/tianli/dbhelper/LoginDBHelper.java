@@ -14,10 +14,10 @@ public class LoginDBHelper extends SQLiteOpenHelper {
 
 	private static final String TABLE_NAME = "user";
 
-	private static final String ID_COL = "id";
-	private static final String IP_COL = "ip";
-	private static final String USER_NAME_COL = "username";
-	private static final String SEAT_ID_COL = "seatid";
+	public static final String ID_COL = "id";
+	public static final String IP_COL = "ip";
+	public static final String USER_NAME_COL = "username";
+	public static final String SEAT_ID_COL = "seatid";
 
 	private static final String SQL_CREATE_ENTRIES = "CREATE TABLE "
 			+ TABLE_NAME + " (" + ID_COL + " INTEGER PRIMARY KEY, " + IP_COL
@@ -57,6 +57,31 @@ public class LoginDBHelper extends SQLiteOpenHelper {
 		values.put(USER_NAME_COL, userDo.userName);
 		values.put(SEAT_ID_COL, userDo.seatId);
 		return db.insert(TABLE_NAME, null, values);
+	}
+
+	public void delete(SQLiteDatabase db, String selection, String[] args) {
+		db.delete(TABLE_NAME, selection, args);
+	}
+
+	// 查询某个用户
+	public UserDO select(SQLiteDatabase db, String where) {
+		UserDO userDo = new UserDO();
+		String sql = "select * from " + TABLE_NAME;
+		if (null != where && !where.equals("")) {
+			sql += " where " + where;
+		}
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()) {
+			userDo.id = cursor.getInt(cursor.getColumnIndex(ID_COL));
+			userDo.ip = cursor.getString(cursor.getColumnIndex(IP_COL));
+			userDo.seatId = cursor.getInt(cursor.getColumnIndex(SEAT_ID_COL));
+			userDo.userName = cursor.getString(cursor
+					.getColumnIndex(USER_NAME_COL));
+			return userDo;
+		}
+		// 查询失败
+		userDo.id = -1;
+		return userDo;
 	}
 
 	public int getCount(SQLiteDatabase db, String where) {

@@ -1,5 +1,16 @@
 create table user (id integer primary key, ip text unique, username unique, seatId integer);
 
-http://url/login?action=1&username=test&seatid=1
+http://url/login?username=test&seatid=1
 action:  1-Login, 2-Logout
 username   seatid
+
+1)判断当前座位是否为空，若为空，则该ip、username，进入该seatId
+  -进入步骤为先删除该ip的其他记录，再进入新的seatId
+2)若非空，则判断是不是本人，若ip匹配，则删除该记录
+  若ip不匹配，则提示该座位已经有人
+  
+  -----return
+  rcode:1 成功 -1 失败 0 异常
+  actionCode：1 入座 2 换座  3 有人 
+  
+  ！！！注意在登录时确保用户名唯一
