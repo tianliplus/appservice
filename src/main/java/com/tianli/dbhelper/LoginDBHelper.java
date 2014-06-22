@@ -63,7 +63,7 @@ public class LoginDBHelper extends SQLiteOpenHelper {
 		db.delete(TABLE_NAME, selection, args);
 	}
 
-	// 查询某个用户
+	// select record
 	public UserDO select(SQLiteDatabase db, String where) {
 		UserDO userDo = new UserDO();
 		String sql = "select * from " + TABLE_NAME;
@@ -79,7 +79,7 @@ public class LoginDBHelper extends SQLiteOpenHelper {
 					.getColumnIndex(USER_NAME_COL));
 			return userDo;
 		}
-		// 查询失败
+		// select failure
 		userDo.id = -1;
 		return userDo;
 	}
