@@ -45,7 +45,15 @@ public class AdminDBHelper extends SQLiteOpenHelper {
 		String[] colNames = c.getColumnNames();
 		LinkedList<Map<String, String>> list = new LinkedList<Map<String, String>>();
 		Map<String, String> map;
-		while (c.moveToFirst()) {
+
+		if (c.moveToFirst()) {
+			map = new HashMap<String, String>();
+			for (String colName : colNames) {
+				map.put(colName, c.getString(c.getColumnIndex(colName)));
+			}
+			list.add(map);
+		}
+		while (c.moveToNext()) {
 			map = new HashMap<String, String>();
 			for (String colName : colNames) {
 				map.put(colName, c.getString(c.getColumnIndex(colName)));
