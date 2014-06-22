@@ -4,9 +4,10 @@ package com.tianli.result;
 
 public class LoginResult extends BaseResult {
 	/*
-	 * 结果类型 0-异常 1-登录成功 2-登出成功 3-已有人
+	 * Action type: 0-innormal 1-login success 2-logout success 3-already
+	 * someone
 	 */
 	public int actioncode = 0;
-	// 只在换座的情况下有效
+	// Only use when change seat
 	public int oldseat;
 }
