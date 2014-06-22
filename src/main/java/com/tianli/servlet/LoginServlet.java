@@ -36,44 +36,45 @@ public class LoginServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
+	 *      
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		LoginResult result = new LoginResult();
 
-		// 获取数据库对象
+		// Obtain database object
 		Context androidContext = (Context) getServletContext().getAttribute(
 				"org.mortbay.ijetty.context");
 		LoginDBHelper mDbHelper = new LoginDBHelper(androidContext);
 		SQLiteDatabase db = mDbHelper.getWritableDatabase();
-		// 获取用户信息
+		// Get user info
 		UserDO userDo = new UserDO();
 		userDo.userName = request.getParameter("username").trim();
 		userDo.seatId = Integer.parseInt(request.getParameter("seatid"));
 		userDo.ip = request.getRemoteAddr().trim();
-		// 获取座位用户信息
+		// Get user at seat info
 		UserDO userAtSeatDo = mDbHelper.select(db, LoginDBHelper.SEAT_ID_COL
 				+ "=" + userDo.seatId);
 		String[] args = { userDo.userName };
-		// -----如果座位没有人-----
+		// -----If the seat is empty-----
 		if (userAtSeatDo.id == -1) {
-			// 先删除该用户的原有记录
+			// Delete the previous record of the user
 			mDbHelper.delete(db, LoginDBHelper.USER_NAME_COL + " = ?", args);
-			// 再把该用户插入到seatId上
+			// Put the user into seatid
 			mDbHelper.insert(db, userDo);
 			result.rcode = 1;
 			result.actioncode = 1;
 			result.oldseat = userAtSeatDo.seatId;
 		} else {
-			// -----如果座位有人-----
-			// -----如果是本人-----
+			// -----If the seat is not empty-----
+			// -----If it is himself, then he get up-----
 			if (userDo.userName == userAtSeatDo.userName) {
 				mDbHelper.delete(db, LoginDBHelper.USER_NAME_COL + "=?", args);
 				result.rcode = 1;
 				result.actioncode = 2;
 			} else {
-				// 座位上是别人
-				// 返回錯誤
+				// If it is someelse
+				// return error
 				result.actioncode = 3;
 				result.rcode = -1;
 			}
