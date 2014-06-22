@@ -1,4 +1,4 @@
-package com.tianli;
+package com.tianli.dbhelper;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

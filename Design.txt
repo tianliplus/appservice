@@ -1,0 +1,5 @@
+create table user (id integer primary key, ip text unique, username unique, seatId integer);
+
+http://url/login?action=1&username=test&seatid=1
+action:  1-Login, 2-Logout
+username   seatid

@@ -1,4 +1,4 @@
-package com.tianli;
+package com.tianli.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;

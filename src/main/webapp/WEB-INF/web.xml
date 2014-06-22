@@ -22,6 +22,12 @@
   	<description></description>
   	<servlet-class>com.tianli.DBSelectServlet</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>LoginServlet</servlet-name>
+  	<display-name>LoginServlet</display-name>
+  	<description></description>
+  	<servlet-class>com.tianli.servlet.LoginServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
   	<servlet-name>TestServlet</servlet-name>
   	<url-pattern>/testlink</url-pattern>
@@ -33,5 +39,9 @@
   <servlet-mapping>
   	<servlet-name>DBSelectServlet</servlet-name>
   	<url-pattern>/query</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>LoginServlet</servlet-name>
+  	<url-pattern>/login</url-pattern>
   </servlet-mapping>
 </web-app>
