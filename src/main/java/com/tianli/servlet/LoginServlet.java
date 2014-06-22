@@ -54,13 +54,13 @@ public class LoginServlet extends HttpServlet {
 		userDo.ip = request.getRemoteAddr().trim();
 		// Get user at seat info
 		UserDO userAtSeatDo = mDbHelper.select(db, LoginDBHelper.SEAT_ID_COL
-				+ "=" + userDo.seatId);
+				+ "='" + userDo.seatId + "'");
 		String[] args = { userDo.userName };
 		// -----If the seat is empty-----
 		if (userAtSeatDo.id == -1) {
 			// -----Check if previous logged-----
 			UserDO preLogin = mDbHelper.select(db, LoginDBHelper.USER_NAME_COL
-					+ "=" + userDo.userName);
+					+ "='" + userDo.userName + "'");
 			if (preLogin.id != -1) {
 				// If previous logged in.
 				// Delete the previous record of the user
