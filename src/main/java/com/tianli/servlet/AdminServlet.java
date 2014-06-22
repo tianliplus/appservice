@@ -2,8 +2,6 @@ package com.tianli.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.LinkedList;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -54,10 +52,10 @@ public class AdminServlet extends HttpServlet {
 		case 1:
 			// -----Selection-----
 			db = mDbHelper.getReadableDatabase();
-			LinkedList<Map<String, String>> list = mDbHelper.select(db, col,
-					sel, arg, group, having, order, limit);
+			// LinkedList<Map<String, String>> list = mDbHelper.select(db, col,
+			// sel, arg, group, having, order, limit);
 			res.rcode = 1;
-			res.adminres = list;
+			// res.adminres = list;
 			break;
 
 		default:
