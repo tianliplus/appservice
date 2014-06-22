@@ -2,6 +2,8 @@ package com.tianli.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.LinkedList;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.google.gson.Gson;
 import com.tianli.dbhelper.AdminDBHelper;
 import com.tianli.result.AdminDbResult;
 
@@ -52,8 +53,8 @@ public class AdminServlet extends HttpServlet {
 		case 1:
 			// -----Selection-----
 			db = mDbHelper.getReadableDatabase();
-			// LinkedList<Map<String, String>> list = mDbHelper.select(db, col,
-			// sel, arg, group, having, order, limit);
+			LinkedList<Map<String, String>> list = mDbHelper.select(db, col,
+					sel, arg, group, having, order, limit);
 			res.rcode = 1;
 			// res.adminres = list;
 			break;
@@ -61,9 +62,9 @@ public class AdminServlet extends HttpServlet {
 		default:
 			break;
 		}
-		Gson gson = new Gson();
+		// Gson gson = new Gson();
 		PrintWriter out = response.getWriter();
-		out.println(gson.toJson(res));
+		// out.println(gson.toJson(res));
 		out.println("sdfsdfsdf");
 		return;
 	}
