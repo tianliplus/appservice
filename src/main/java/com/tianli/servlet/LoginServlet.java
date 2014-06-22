@@ -65,6 +65,7 @@ public class LoginServlet extends HttpServlet {
 			result.rcode = 1;
 			result.actioncode = 1;
 			result.oldseat = userAtSeatDo.seatId;
+			result.seatid = userDo.seatId;
 		} else {
 			// -----If the seat is not empty-----
 			// -----If it is himself, then he get up-----
