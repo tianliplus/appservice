@@ -46,9 +46,9 @@ public class LoginDBHelper extends SQLiteOpenHelper {
 	}
 
 	public long insert(SQLiteDatabase db, UserDO userDo) {
-		if (getCount(db, IP_COL + "=" + userDo.ip.trim()) > 0)
+		if (getCount(db, IP_COL + "='" + userDo.ip.trim() + "'") > 0)
 			return -1;
-		if (getCount(db, USER_NAME_COL + "=" + userDo.userName.trim()) > 0)
+		if (getCount(db, USER_NAME_COL + "='" + userDo.userName.trim() + "'") > 0)
 			return -2;
 		if (getCount(db, SEAT_ID_COL + "=" + userDo.seatId) > 0)
 			return -3;
