@@ -36,7 +36,7 @@ public class LoginServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
-	 *      
+	 * 
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -58,13 +58,22 @@ public class LoginServlet extends HttpServlet {
 		String[] args = { userDo.userName };
 		// -----If the seat is empty-----
 		if (userAtSeatDo.id == -1) {
-			// Delete the previous record of the user
-			mDbHelper.delete(db, LoginDBHelper.USER_NAME_COL + " = ?", args);
+			// -----Check if previous logged-----
+			UserDO preLogin = mDbHelper.select(db, LoginDBHelper.USER_NAME_COL
+					+ "=" + userDo.userName);
+			if (preLogin.id != -1) {
+				// If previous logged in.
+				// Delete the previous record of the user
+				mDbHelper
+						.delete(db, LoginDBHelper.USER_NAME_COL + " = ?", args);
+				result.actioncode = 2;
+				result.oldseat = preLogin.seatId;
+			} else {
+				result.actioncode = 1;
+			}
 			// Put the user into seatid
 			mDbHelper.insert(db, userDo);
 			result.rcode = 1;
-			result.actioncode = 1;
-			result.oldseat = userAtSeatDo.seatId;
 			result.seatid = userDo.seatId;
 		} else {
 			// -----If the seat is not empty-----
@@ -72,11 +81,12 @@ public class LoginServlet extends HttpServlet {
 			if (userDo.userName == userAtSeatDo.userName) {
 				mDbHelper.delete(db, LoginDBHelper.USER_NAME_COL + "=?", args);
 				result.rcode = 1;
-				result.actioncode = 2;
+				result.actioncode = 3;
+				result.seatid = userDo.seatId;
 			} else {
 				// If it is someelse
 				// return error
-				result.actioncode = 3;
+				result.actioncode = 4;
 				result.rcode = -1;
 			}
 		}
@@ -85,8 +95,6 @@ public class LoginServlet extends HttpServlet {
 		out.println(gson.toJson(result));
 		return;
 	}
-
-
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
