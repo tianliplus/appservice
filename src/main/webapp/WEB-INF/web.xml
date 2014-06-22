@@ -8,19 +8,19 @@
   	<servlet-name>TestServlet</servlet-name>
   	<display-name>TestServlet</display-name>
   	<description></description>
-  	<servlet-class>com.tianli.TestServlet</servlet-class>
+  	<servlet-class>com.tianli.servlet.TestServlet</servlet-class>
   </servlet>
   <servlet>
   	<servlet-name>DbServlet</servlet-name>
   	<display-name>DbServlet</display-name>
   	<description></description>
-  	<servlet-class>com.tianli.DbServlet</servlet-class>
+  	<servlet-class>com.tianli.servlet.DbServlet</servlet-class>
   </servlet>
   <servlet>
   	<servlet-name>DBSelectServlet</servlet-name>
   	<display-name>DBSelectServlet</display-name>
   	<description></description>
-  	<servlet-class>com.tianli.DBSelectServlet</servlet-class>
+  	<servlet-class>com.tianli.servlet.DBSelectServlet</servlet-class>
   </servlet>
   <servlet>
   	<servlet-name>LoginServlet</servlet-name>

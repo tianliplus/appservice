@@ -66,6 +66,7 @@ public class AdminServlet extends HttpServlet {
 		Gson gson = new Gson();
 		PrintWriter out = response.getWriter();
 		out.println(gson.toJson(res));
+		out.println("sdfsdfsdf");
 		return;
 	}
 
