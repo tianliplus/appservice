@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.google.gson.Gson;
 import com.tianli.dataobject.UserDO;
 import com.tianli.dbhelper.LoginDBHelper;
+import com.tianli.result.LoginResult;
 
 /**
  * Servlet implementation class LoginServlet
@@ -37,7 +39,8 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		long rCode = 0;
+		LoginResult result = new LoginResult();
+		long rowId = 0;
 
 		Context androidContext = (Context) getServletContext().getAttribute(
 				"org.mortbay.ijetty.context");
@@ -51,15 +54,23 @@ public class LoginServlet extends HttpServlet {
 				userDo.seatId = Integer
 						.parseInt(request.getParameter("seatid"));
 				userDo.ip = request.getRemoteAddr().trim();
-				rCode = mDbHelper.insert(db, userDo);
+				rowId = mDbHelper.insert(db, userDo);
+				if (rowId > 0) {
+					result.rowId = (int) rowId;
+					result.rcode = 1;
+					result.seatId = Integer.parseInt(request
+							.getParameter("seatid"));
+				}
 			}
 			break;
 		case LOGOUT_ACTION:
 
 			break;
 		}
+		Gson gson = new Gson();
+
 		PrintWriter out = response.getWriter();
-		out.println("rCode=" + rCode);
+		out.println(gson.toJson(result));
 		return;
 	}
 
