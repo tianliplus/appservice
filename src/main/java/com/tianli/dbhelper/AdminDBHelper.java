@@ -31,8 +31,15 @@ public class AdminDBHelper extends SQLiteOpenHelper {
 	public LinkedList<Map<String, String>> select(SQLiteDatabase db,
 			String col, String sel, String arg,
 			String group, String having, String order, String limit) {
-		String[] columns = col.split("\\.\\.");
-		String[] args = arg.split("\\.\\.");
+
+		String[] columns = null;
+		String[] args = null;
+		if (null != col) {
+			columns = col.split("\\.\\.");
+		}
+		if (null != arg) {
+			args = arg.split("\\.\\.");
+		}
 		Cursor c = db.query(TABLE_NAME, columns, sel, args, group, having,
 				order, limit);
 		String[] colNames = c.getColumnNames();
