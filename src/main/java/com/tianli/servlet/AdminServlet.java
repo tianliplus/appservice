@@ -35,9 +35,10 @@ public class AdminServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		AdminDbResult res = new AdminDbResult();
 		// Check if admin
-		if ("127.0.0.1" != request.getRemoteAddr().trim()) {
+		if (!"127.0.0.1".equals(request.getRemoteAddr().trim())) {
 			res.rcode = -1;
-			res.message = request.getRemoteAddr().trim();
+			res.message = "Permission Deny! IP: "
+					+ request.getRemoteAddr().trim();
 		} else {
 			// Get table name...
 			String tableName = request.getParameter("table");
