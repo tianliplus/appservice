@@ -37,6 +37,7 @@ public class AdminServlet extends HttpServlet {
 		// Check if admin
 		if ("127.0.0.1" != request.getRemoteAddr().trim()) {
 			res.rcode = -1;
+			res.message = request.getRemoteAddr().trim();
 		} else {
 			// Get table name...
 			String tableName = request.getParameter("table");
