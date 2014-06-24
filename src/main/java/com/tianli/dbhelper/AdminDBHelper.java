@@ -20,6 +20,7 @@ public class AdminDBHelper extends SQLiteOpenHelper {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		TABLE_NAME = tableName;
 	}
+
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 	}
@@ -29,9 +30,8 @@ public class AdminDBHelper extends SQLiteOpenHelper {
 	}
 
 	public LinkedList<Map<String, String>> select(SQLiteDatabase db,
-			String col, String sel, String arg,
-			String group, String having, String order, String limit) {
-
+			String col, String sel, String arg, String group, String having,
+			String order, String limit) {
 		String[] columns = null;
 		String[] args = null;
 		if (null != col) {
@@ -61,5 +61,9 @@ public class AdminDBHelper extends SQLiteOpenHelper {
 			list.add(map);
 		}
 		return list;
+	}
+
+	public void clearData(SQLiteDatabase db) {
+		db.delete(TABLE_NAME, null, null);
 	}
 }

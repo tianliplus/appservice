@@ -12,7 +12,7 @@ public class LoginDBHelper extends SQLiteOpenHelper {
 	public static final String DATABASE_NAME = "shengji.db";
 	public static final int DATABASE_VERSION = 1;
 
-	private static final String TABLE_NAME = "user";
+	public static final String TABLE_NAME = "user";
 
 	public static final String ID_COL = "id";
 	public static final String IP_COL = "ip";

@@ -11,11 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.google.gson.Gson;
-import com.tianli.dbhelper.AdminDBHelper;
 import com.tianli.result.AdminDbResult;
+import com.tianli.service.AdminService;
 
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -40,36 +39,33 @@ public class AdminServlet extends HttpServlet {
 			res.message = "Permission Deny! IP: "
 					+ request.getRemoteAddr().trim();
 		} else {
+			AdminService service = new AdminService(request, response);
+			Context androidContext = (Context) getServletContext()
+					.getAttribute("org.mortbay.ijetty.context");
 			// Get table name...
 			String tableName = request.getParameter("table");
 			// Get action type:
-			// 0-rawSql with no return, 1-select, 2-insert, 3-update, 4-delete,
+			// 0-reset server, 1-select, 2-insert, 3-update, 4-delete,
 			// 5-drop
 			int actionType = Integer.parseInt(request.getParameter("action"));
-			Context androidContext = (Context) getServletContext()
-					.getAttribute("org.mortbay.ijetty.context");
-			AdminDBHelper mDbHelper = new AdminDBHelper(androidContext,
-					tableName);
-			SQLiteDatabase db;
-			// Get request parameters
-			String col = request.getParameter("col");
-			String sel = request.getParameter("sel");
-			String arg = request.getParameter("arg");
-			String group = request.getParameter("group");
-			String having = request.getParameter("having");
-			String order = request.getParameter("order");
-			String limit = request.getParameter("limit");
-
 			switch (actionType) {
+			case 0:
+				// -----Reset Server-----
+				if (service.doReset(androidContext)) {
+					res.rcode = 1;
+					res.adminresult = "All data cleared.";
+				} else {
+					res.rcode = -1;
+					res.message = "Unknown error";
+				}
+				break;
 			case 1:
 				// -----Selection-----
-				db = mDbHelper.getReadableDatabase();
-				LinkedList<Map<String, String>> list = mDbHelper.select(db,
-						col, sel, arg, group, having, order, limit);
+				LinkedList<Map<String, String>> list = service.doSelect(
+						androidContext, tableName);
 				res.rcode = 1;
 				res.adminresult = list;
 				break;
-
 			default:
 				break;
 			}
@@ -79,6 +75,7 @@ public class AdminServlet extends HttpServlet {
 		out.println(gson.toJson(res));
 		return;
 	}
+
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
