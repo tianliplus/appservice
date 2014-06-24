@@ -42,8 +42,7 @@ public class AdminServlet extends HttpServlet {
 			AdminService service = new AdminService(request, response);
 			Context androidContext = (Context) getServletContext()
 					.getAttribute("org.mortbay.ijetty.context");
-			// Get table name...
-			String tableName = request.getParameter("table");
+
 			// Get action type:
 			// 0-reset server, 1-select, 2-insert, 3-update, 4-delete,
 			// 5-drop
@@ -61,10 +60,18 @@ public class AdminServlet extends HttpServlet {
 				break;
 			case 1:
 				// -----Selection-----
-				LinkedList<Map<String, String>> list = service.doSelect(
-						androidContext, tableName);
-				res.rcode = 1;
-				res.adminresult = list;
+				// Get table name...
+				String tableName = request.getParameter("table");
+				try {
+					LinkedList<Map<String, String>> list = service.doSelect(
+							androidContext, tableName);
+					res.rcode = 1;
+					res.adminresult = list == null ? list : "Empty table.";
+				} catch (Exception e) {
+					res.rcode = -1;
+					res.message = "Unknown error";
+
+				}
 				break;
 			default:
 				break;
@@ -75,7 +82,6 @@ public class AdminServlet extends HttpServlet {
 		out.println(gson.toJson(res));
 		return;
 	}
-
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse

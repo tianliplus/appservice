@@ -21,13 +21,13 @@ public class AdminService extends BaseService {
 	public boolean doReset(Context androidContext) {
 		String[] tableNames = { LoginDBHelper.TABLE_NAME };
 		try {
-		for (String tableName : tableNames) {
-			AdminDBHelper mDbHelper = new AdminDBHelper(androidContext,
-					tableName);
-			SQLiteDatabase db = mDbHelper.getWritableDatabase();
-			mDbHelper.clearData(db);
-		}
-		return true;
+			for (String tableName : tableNames) {
+				AdminDBHelper mDbHelper = new AdminDBHelper(androidContext,
+						tableName);
+				SQLiteDatabase db = mDbHelper.getWritableDatabase();
+				mDbHelper.clearData(db);
+			}
+			return true;
 		} catch (Exception e) {
 			return false;
 		}
@@ -46,12 +46,8 @@ public class AdminService extends BaseService {
 		String order = req.getParameter("order");
 		String limit = req.getParameter("limit");
 		// Search
-		try {
-			LinkedList<Map<String, String>> list = mDbHelper.select(db, col,
-					sel, arg, group, having, order, limit);
-			return list;
-		} catch (Exception e) {
-			return null;
-		}
+		LinkedList<Map<String, String>> list = mDbHelper.select(db, col, sel,
+				arg, group, having, order, limit);
+		return list;
 	}
 }
