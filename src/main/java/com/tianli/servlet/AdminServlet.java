@@ -55,7 +55,7 @@ public class AdminServlet extends HttpServlet {
 					res.adminresult = "All data cleared.";
 				} else {
 					res.rcode = -1;
-					res.message = "Unknown error";
+					res.message = "Unknown error.";
 				}
 				break;
 			case 1:
@@ -66,11 +66,10 @@ public class AdminServlet extends HttpServlet {
 					LinkedList<Map<String, String>> list = service.doSelect(
 							androidContext, tableName);
 					res.rcode = 1;
-					res.adminresult = list == null ? list : "Empty table.";
+					res.adminresult = (list != null) ? list : "Empty table.";
 				} catch (Exception e) {
 					res.rcode = -1;
-					res.message = "Unknown error";
-
+					res.message = "Unknown error.";
 				}
 				break;
 			default:
