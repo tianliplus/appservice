@@ -1,5 +1,9 @@
 package com.tianli.dbhelper;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,7 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.tianli.dataobject.UserDO;
 
-public class LoginDBHelper extends SQLiteOpenHelper {
+public class UserDBHelper extends SQLiteOpenHelper {
 	public static final String DATABASE_NAME = "shengji.db";
 	public static final int DATABASE_VERSION = 1;
 
@@ -26,7 +30,7 @@ public class LoginDBHelper extends SQLiteOpenHelper {
 	private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS "
 			+ TABLE_NAME;
 
-	public LoginDBHelper(Context context) {
+	public UserDBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
@@ -61,6 +65,41 @@ public class LoginDBHelper extends SQLiteOpenHelper {
 
 	public void delete(SQLiteDatabase db, String selection, String[] args) {
 		db.delete(TABLE_NAME, selection, args);
+	}
+
+	// select list
+	public LinkedList<Map<String, String>> select(SQLiteDatabase db,
+			String col, String sel, String arg, String group, String having,
+			String order, String limit) {
+		String[] columns = null;
+		String[] args = null;
+		if (null != col) {
+			columns = col.split("\\.\\.");
+		}
+		if (null != arg) {
+			args = arg.split("\\.\\.");
+		}
+		Cursor c = db.query(TABLE_NAME, columns, sel, args, group, having,
+				order, limit);
+		String[] colNames = c.getColumnNames();
+		LinkedList<Map<String, String>> list = new LinkedList<Map<String, String>>();
+		Map<String, String> map;
+
+		if (c.moveToFirst()) {
+			map = new HashMap<String, String>();
+			for (String colName : colNames) {
+				map.put(colName, c.getString(c.getColumnIndex(colName)));
+			}
+			list.add(map);
+		}
+		while (c.moveToNext()) {
+			map = new HashMap<String, String>();
+			for (String colName : colNames) {
+				map.put(colName, c.getString(c.getColumnIndex(colName)));
+			}
+			list.add(map);
+		}
+		return list;
 	}
 
 	// select record

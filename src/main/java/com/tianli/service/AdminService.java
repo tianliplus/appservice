@@ -10,7 +10,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.tianli.dbhelper.AdminDBHelper;
-import com.tianli.dbhelper.LoginDBHelper;
+import com.tianli.dbhelper.UserDBHelper;
 
 public class AdminService extends BaseService {
 
@@ -19,7 +19,7 @@ public class AdminService extends BaseService {
 	}
 
 	public boolean doReset(Context androidContext) {
-		String[] tableNames = { LoginDBHelper.TABLE_NAME };
+		String[] tableNames = { UserDBHelper.TABLE_NAME };
 		try {
 			for (String tableName : tableNames) {
 				AdminDBHelper mDbHelper = new AdminDBHelper(androidContext,

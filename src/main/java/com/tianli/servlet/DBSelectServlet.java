@@ -8,11 +8,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.tianli.dbhelper.TestDBHelper;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.tianli.dbhelper.TestDBHelper;
 
 /**
  * Servlet implementation class DBSelectServlet
@@ -25,7 +25,6 @@ public class DBSelectServlet extends HttpServlet {
 	 */
 	public DBSelectServlet() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 

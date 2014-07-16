@@ -27,7 +27,6 @@ public class InitServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		BaseResult result = new BaseResult();
 		String userName = request.getParameter("username");
-		String hostIp = request.getParameter("hostip");
 		if (userName != null) {
 			result.rcode = 1;
 		}
@@ -41,7 +40,6 @@ public class InitServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 	}
 
 }

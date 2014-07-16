@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.google.gson.Gson;
 import com.tianli.dataobject.UserDO;
-import com.tianli.dbhelper.LoginDBHelper;
+import com.tianli.dbhelper.UserDBHelper;
 import com.tianli.result.LoginResult;
 
 /**
@@ -30,7 +30,6 @@ public class LoginServlet extends HttpServlet {
 	 */
 	public LoginServlet() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -45,7 +44,7 @@ public class LoginServlet extends HttpServlet {
 		// Obtain database object
 		Context androidContext = (Context) getServletContext().getAttribute(
 				"org.mortbay.ijetty.context");
-		LoginDBHelper mDbHelper = new LoginDBHelper(androidContext);
+		UserDBHelper mDbHelper = new UserDBHelper(androidContext);
 		SQLiteDatabase db = mDbHelper.getWritableDatabase();
 		// Get user info
 		UserDO userDo = new UserDO();
@@ -53,19 +52,19 @@ public class LoginServlet extends HttpServlet {
 		userDo.seatId = Integer.parseInt(request.getParameter("seatid"));
 		userDo.ip = request.getRemoteAddr().trim();
 		// Get user at seat info
-		UserDO userAtSeatDo = mDbHelper.select(db, LoginDBHelper.SEAT_ID_COL
+		UserDO userAtSeatDo = mDbHelper.select(db, UserDBHelper.SEAT_ID_COL
 				+ "='" + userDo.seatId + "'");
 		String[] args = { userDo.userName };
 		// -----If the seat is empty-----
 		if (userAtSeatDo.id == -1) {
 			// -----Check if previous logged-----
-			UserDO preLogin = mDbHelper.select(db, LoginDBHelper.USER_NAME_COL
+			UserDO preLogin = mDbHelper.select(db, UserDBHelper.USER_NAME_COL
 					+ "='" + userDo.userName + "'");
 			if (preLogin.id != -1) {
 				// If previous logged in.
 				// Delete the previous record of the user
 				mDbHelper
-						.delete(db, LoginDBHelper.USER_NAME_COL + " = ?", args);
+						.delete(db, UserDBHelper.USER_NAME_COL + " = ?", args);
 				result.actioncode = 2;
 				result.oldseat = preLogin.seatId;
 			} else {
@@ -79,7 +78,7 @@ public class LoginServlet extends HttpServlet {
 			// -----If the seat is not empty-----
 			// -----If it is himself, then he get up-----
 			if (userDo.userName == userAtSeatDo.userName) {
-				mDbHelper.delete(db, LoginDBHelper.USER_NAME_COL + "=?", args);
+				mDbHelper.delete(db, UserDBHelper.USER_NAME_COL + "=?", args);
 				result.rcode = 1;
 				result.actioncode = 3;
 				result.seatid = userDo.seatId;

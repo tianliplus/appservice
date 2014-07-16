@@ -40,6 +40,12 @@
   	<description></description>
   	<servlet-class>com.tianli.servlet.InitServlet</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>TextServlet</servlet-name>
+  	<display-name>TextServlet</display-name>
+  	<description></description>
+  	<servlet-class>com.tianli.servlet.TextServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
   	<servlet-name>TestServlet</servlet-name>
   	<url-pattern>/testlink</url-pattern>
@@ -63,5 +69,9 @@
   <servlet-mapping>
   	<servlet-name>InitServlet</servlet-name>
   	<url-pattern>/init</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>TextServlet</servlet-name>
+  	<url-pattern>/text</url-pattern>
   </servlet-mapping>
 </web-app>
