@@ -48,7 +48,7 @@
   </servlet>
   <servlet-mapping>
   	<servlet-name>TestServlet</servlet-name>
-  	<url-pattern>/testlink</url-pattern>
+  	<url-pattern>/test</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>DbServlet</servlet-name>
