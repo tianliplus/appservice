@@ -18,6 +18,7 @@ public class TestServlet extends HttpServlet {
      * Default constructor. 
      */
     public TestServlet() {
+		super();
     }
 
 	/**
