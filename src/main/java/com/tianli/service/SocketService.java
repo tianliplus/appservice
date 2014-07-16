@@ -7,14 +7,16 @@ import java.net.UnknownHostException;
 
 public class SocketService {
 	public int port = 8821;
+	String msgCode = "0001";
 
 	public void sendMessage(String[] clientIp, String message) {
+		String cmd = msgCode + message;
 		for (String ip : clientIp) {
-			sendToIp(ip, message);
+			sendToIp(ip, cmd);
 		}
 	}
 
-	private void sendToIp(String ip, String message) {
+	private void sendToIp(String ip, String cmd) {
 		Socket socket = null;
 		OutputStream outputStream = null;
 		try {
@@ -25,7 +27,7 @@ public class SocketService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		byte[] bytes = message.getBytes();
+		byte[] bytes = cmd.getBytes();
 		try {
 			outputStream.write(bytes);
 			outputStream.flush();
