@@ -57,16 +57,16 @@ public class SeatServlet extends HttpServlet {
 		// Get user at seat info
 		UserDO userAtSeatDo = mDbHelper.select(db, UserDBHelper.SEAT_ID_COL
 				+ "='" + userDo.seatId + "'");
-		String[] args = { userDo.userName };
+		String[] args = { userDo.ip };
 		// -----If the seat is empty-----
 		if (userAtSeatDo.id == -1) {
 			// -----Check if previous logged-----
-			UserDO preLogin = mDbHelper.select(db, UserDBHelper.USER_NAME_COL
-					+ "='" + userDo.userName + "'");
+			UserDO preLogin = mDbHelper.select(db, UserDBHelper.IP_COL + "='"
+					+ userDo.ip + "'");
 			if (preLogin.id != -1) {
 				// If previous logged in.
 				// Delete the previous record of the user
-				mDbHelper.delete(db, UserDBHelper.USER_NAME_COL + " = ?", args);
+				mDbHelper.delete(db, UserDBHelper.IP_COL + " = ?", args);
 				result.actioncode = 2;
 				result.oldseat = preLogin.seatId;
 			} else {
@@ -79,8 +79,8 @@ public class SeatServlet extends HttpServlet {
 		} else {
 			// -----If the seat is not empty-----
 			// -----If it is himself, then he get up-----
-			if (userDo.userName.equalsIgnoreCase(userAtSeatDo.userName)) {
-				mDbHelper.delete(db, UserDBHelper.USER_NAME_COL + "=?", args);
+			if (userDo.ip.equalsIgnoreCase(userAtSeatDo.ip)) {
+				mDbHelper.delete(db, UserDBHelper.IP_COL + "=?", args);
 				result.rcode = 1;
 				result.actioncode = 3;
 				result.seatid = userDo.seatId;
