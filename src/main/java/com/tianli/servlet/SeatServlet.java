@@ -2,6 +2,7 @@ package com.tianli.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,14 +13,16 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.google.gson.Gson;
+import com.tianli.dao.UserDAO;
 import com.tianli.dataobject.UserDO;
 import com.tianli.dbhelper.UserDBHelper;
 import com.tianli.result.LoginResult;
+import com.tianli.service.SocketService;
 
 /**
  * Servlet implementation class LoginServlet
  */
-public class LoginServlet extends HttpServlet {
+public class SeatServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private static final int LOGIN_ACTION = 1;
@@ -28,7 +31,7 @@ public class LoginServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public LoginServlet() {
+	public SeatServlet() {
 		super();
 	}
 
@@ -63,8 +66,7 @@ public class LoginServlet extends HttpServlet {
 			if (preLogin.id != -1) {
 				// If previous logged in.
 				// Delete the previous record of the user
-				mDbHelper
-						.delete(db, UserDBHelper.USER_NAME_COL + " = ?", args);
+				mDbHelper.delete(db, UserDBHelper.USER_NAME_COL + " = ?", args);
 				result.actioncode = 2;
 				result.oldseat = preLogin.seatId;
 			} else {
@@ -77,7 +79,7 @@ public class LoginServlet extends HttpServlet {
 		} else {
 			// -----If the seat is not empty-----
 			// -----If it is himself, then he get up-----
-			if (userDo.userName == userAtSeatDo.userName) {
+			if (userDo.userName.equalsIgnoreCase(userAtSeatDo.userName)) {
 				mDbHelper.delete(db, UserDBHelper.USER_NAME_COL + "=?", args);
 				result.rcode = 1;
 				result.actioncode = 3;
@@ -89,10 +91,33 @@ public class LoginServlet extends HttpServlet {
 				result.rcode = -1;
 			}
 		}
+		// Get seat status
+		UserDAO userDAO = new UserDAO();
+		Map<Integer, String> seatStatus = userDAO.getSeatStatus(androidContext);
+		String message = parseSeatStatus(seatStatus);
+		String[] clientsIp = userDAO.getClientsIp(androidContext);
+		// Broadcast to all clients
+		SocketService service = new SocketService();
+		service.sendGeneralSocket(SocketService.SEAT_CODE, clientsIp, message);
+
 		Gson gson = new Gson();
 		PrintWriter out = response.getWriter();
 		out.println(gson.toJson(result));
 		return;
+	}
+
+	private String parseSeatStatus(Map<Integer, String> seatStatus) {
+		StringBuilder sb = new StringBuilder();
+		// SeatID from 1 to 4, add the username
+		for (int i = 1; i <= 4; i++) {
+			Object user = seatStatus.get(i);
+			if (null != user) {
+				sb.append(i);
+				sb.append(user);
+				sb.append(',');
+			}
+		}
+		return sb.toString();
 	}
 
 	/**

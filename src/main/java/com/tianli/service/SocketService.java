@@ -7,13 +7,18 @@ import java.net.UnknownHostException;
 
 public class SocketService {
 	public int port = 8821;
-	String msgCode = "0001";
+	public final static String MSG_CODE = "0001";
+	public final static String SEAT_CODE = "0002";
 
 	public void sendMessage(String[] clientIp, String message) {
-		String cmd = msgCode + message;
+		String cmd = MSG_CODE + message;
 		for (String ip : clientIp) {
 			sendToIp(ip, cmd);
 		}
+	}
+
+	public void sendGeneralSocket(String code, String[] clientIp, String message) {
+
 	}
 
 	private void sendToIp(String ip, String cmd) {
@@ -42,5 +47,6 @@ public class SocketService {
 			}
 		}
 	}
+
 
 }

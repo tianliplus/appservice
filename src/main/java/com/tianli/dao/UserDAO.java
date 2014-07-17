@@ -1,5 +1,6 @@
 package com.tianli.dao;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -24,5 +25,19 @@ public class UserDAO {
 		} else {
 			return null;
 		}
+	}
+
+	public HashMap<Integer, String> getSeatStatus(Context context) {
+		HashMap<Integer, String> result = new HashMap<Integer, String>();
+		UserDBHelper mDbHelper = new UserDBHelper(context);
+		SQLiteDatabase db = mDbHelper.getReadableDatabase();
+		LinkedList<Map<String, String>> list = mDbHelper.select(db,
+				"username..seatid", null, null, null, null, null, null);
+		for(Map<String, String> item:list){
+			int seatID=Integer.valueOf(item.get(UserDBHelper.SEAT_ID_COL));
+			String userName=item.get(UserDBHelper.USER_NAME_COL);
+			result.put(seatID, userName);
+		}
+		return result;
 	}
 }
