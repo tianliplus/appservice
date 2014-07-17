@@ -60,30 +60,13 @@ public class SeatServlet extends HttpServlet {
 		String[] args = { userDo.ip };
 		// -----If the seat is empty-----
 		if (userAtSeatDo.id == -1) {
-			// -----Check if previous logged-----
-			UserDO preLogin = mDbHelper.select(db, UserDBHelper.IP_COL + "='"
-					+ userDo.ip + "'");
-			if (preLogin.id != -1) {
-				// If previous logged in.
-				// Delete the previous record of the user
-				mDbHelper.delete(db, UserDBHelper.IP_COL + " = ?", args);
-				result.actioncode = 2;
-				result.oldseat = preLogin.seatId;
-			} else {
-				result.actioncode = 1;
-			}
-			// Put the user into seatid
-			mDbHelper.insert(db, userDo);
-			result.rcode = 1;
-			result.seatid = userDo.seatId;
+			mDbHelper.updateSeat(db, userDo);
 		} else {
 			// -----If the seat is not empty-----
 			// -----If it is himself, then he get up-----
 			if (userDo.ip.equalsIgnoreCase(userAtSeatDo.ip)) {
-				mDbHelper.delete(db, UserDBHelper.IP_COL + "=?", args);
-				result.rcode = 1;
-				result.actioncode = 3;
-				result.seatid = userDo.seatId;
+				userDo.seatId = 0;
+				mDbHelper.updateSeat(db, userDo);
 			} else {
 				// If it is someelse
 				// return error

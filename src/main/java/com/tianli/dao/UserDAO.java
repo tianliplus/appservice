@@ -15,7 +15,7 @@ public class UserDAO {
 		SQLiteDatabase db = mDbHelper.getReadableDatabase();
 		LinkedList<Map<String, String>> list = mDbHelper.select(db, "ip", null,
 				null, null, null, null, null);
-		if (list != null) {
+		if (list.size() > 0) {
 			Map<String, String>[] res = list.toArray(new Map[0]);
 			String[] ips = new String[res.length];
 			for (int i = 0; i < ips.length; i++) {

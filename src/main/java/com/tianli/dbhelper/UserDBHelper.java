@@ -123,6 +123,25 @@ public class UserDBHelper extends SQLiteOpenHelper {
 		return userDo;
 	}
 
+	public int updateSeat(SQLiteDatabase db, UserDO userDo) {
+		String[] arg = { userDo.ip };
+		String[] cols = { UserDBHelper.SEAT_ID_COL, UserDBHelper.USER_NAME_COL };
+		String[] vals = { "" + userDo.seatId, userDo.userName };
+		return update(db, UserDBHelper.IP_COL + "=?", arg, cols, vals);
+
+	}
+
+	// update record
+	public int update(SQLiteDatabase db, String selection, String[] args,
+			String[] cols, String[] vals) {
+		ContentValues values = new ContentValues();
+		for (int i = 0; i < cols.length; i++) {
+			values.put(cols[i], vals[i]);
+		}
+		int count = db.update(TABLE_NAME, values, selection, args);
+		return count;
+	}
+
 	public int getCount(SQLiteDatabase db, String where) {
 		String sql = "select count(*) from " + TABLE_NAME;
 		if (null != where && !where.equals("")) {

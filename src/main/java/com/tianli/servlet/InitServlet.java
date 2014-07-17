@@ -10,9 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.google.gson.Gson;
 import com.tianli.dao.UserDAO;
+import com.tianli.dataobject.UserDO;
+import com.tianli.dbhelper.UserDBHelper;
 import com.tianli.result.BaseResult;
 import com.tianli.service.SocketService;
 
@@ -48,6 +51,16 @@ public class InitServlet extends HttpServlet {
 		BaseResult result = new BaseResult();
 		String userName = request.getParameter("username");
 		if (userName != null) {
+			UserDO userDo = new UserDO();
+			userDo.userName = userName.trim();
+			userDo.seatId = 0;
+			userDo.ip = request.getRemoteAddr().trim();
+			Context androidContext = (Context) getServletContext()
+					.getAttribute("org.mortbay.ijetty.context");
+			UserDBHelper mDbHelper = new UserDBHelper(androidContext);
+			SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+			mDbHelper.insert(db, userDo);
 			result.rcode = 1;
 		}
 		Gson gson = new Gson();

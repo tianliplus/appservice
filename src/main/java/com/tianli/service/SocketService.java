@@ -19,6 +19,7 @@ public class SocketService {
 
 	public void sendGeneralSocket(String code, String[] clientIp, String message) {
 		String cmd = code + message;
+
 		for (String ip : clientIp) {
 			sendToIp(ip, cmd);
 		}
