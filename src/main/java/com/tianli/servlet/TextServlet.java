@@ -46,8 +46,6 @@ public class TextServlet extends HttpServlet {
 			// get logged user ip
 			String[] clientsIp = userDAO.getClientsIp(androidContext);
 			// build text
-			// next line is for test use
-			userName = "socket";
 			String message = userName + ',' + text;
 			// send by socket
 			SocketService service = new SocketService();
