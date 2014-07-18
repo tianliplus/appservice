@@ -40,7 +40,7 @@ public class SocketService {
 		try {
 			outputStream.write(bytes);
 			outputStream.flush();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if (null != socket) {
