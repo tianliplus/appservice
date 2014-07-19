@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.google.gson.Gson;
+import com.tianli.dbhelper.SeatDBHelper;
 import com.tianli.result.AdminDbResult;
 import com.tianli.service.AdminService;
 
@@ -81,6 +83,12 @@ public class AdminServlet extends HttpServlet {
 				String colString = request.getParameter("cols");
 				String valString = request.getParameter("vals");
 				service.doInsert(colString, valString);
+
+			case 8:
+				SeatDBHelper dbHelper = new SeatDBHelper(androidContext);
+				SQLiteDatabase db = dbHelper.getWritableDatabase();
+				db.execSQL("insert into seat values(1,0)");
+				break;
 			default:
 				break;
 			}
