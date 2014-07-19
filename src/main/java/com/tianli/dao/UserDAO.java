@@ -55,7 +55,8 @@ public class UserDAO {
 	public int getSeatByIp(Context context, String ip) {
 		UserDBHelper mDbHelper = new UserDBHelper(context);
 		SQLiteDatabase db = mDbHelper.getReadableDatabase();
-		UserDO userDO = mDbHelper.select(db, UserDBHelper.IP_COL + "=" + ip);
+		UserDO userDO = mDbHelper.select(db, UserDBHelper.IP_COL + "='" + ip
+				+ "'");
 		return userDO.seatId;
 	}
 }
