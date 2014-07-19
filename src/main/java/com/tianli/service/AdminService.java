@@ -20,6 +20,7 @@ public class AdminService extends BaseService {
 
 	Context context;
 	String tableName;
+
 	public AdminService(Context context, String tableName) {
 		this.context = context;
 		this.tableName = tableName;
@@ -72,12 +73,12 @@ public class AdminService extends BaseService {
 	public void doInsert(String colString, String valString) {
 		SQLiteDatabase db = null;
 		boolean emptyName = true;
-		if (tableName == SeatDBHelper.TABLE_NAME) {
+		if (tableName.equalsIgnoreCase(SeatDBHelper.TABLE_NAME)) {
 			SeatDBHelper dbHelper = new SeatDBHelper(context);
 			db = dbHelper.getWritableDatabase();
 			emptyName = false;
 		}
-		if (tableName == UserDBHelper.TABLE_NAME) {
+		if (tableName.equalsIgnoreCase(UserDBHelper.TABLE_NAME)) {
 			UserDBHelper dbHelper = new UserDBHelper(context);
 			db = dbHelper.getWritableDatabase();
 			emptyName = false;
