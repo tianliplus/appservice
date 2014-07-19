@@ -70,8 +70,10 @@ public class AdminServlet extends HttpServlet {
 							: "Empty table.";
 				} catch (Exception e) {
 					res.rcode = -1;
-					res.message = "Unknown error.";
+					res.message = "Error: " + e.getMessage();
 				}
+				break;
+			case 2:
 				break;
 			default:
 				break;
