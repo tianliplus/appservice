@@ -71,18 +71,24 @@ public class AdminService extends BaseService {
 
 	public void doInsert(String colString, String valString) {
 		SQLiteDatabase db = null;
+		boolean emptyName = true;
 		if (tableName == SeatDBHelper.TABLE_NAME) {
 			SeatDBHelper dbHelper = new SeatDBHelper(context);
 			db = dbHelper.getWritableDatabase();
+			emptyName = false;
 		}
 		if (tableName == UserDBHelper.TABLE_NAME) {
 			UserDBHelper dbHelper = new UserDBHelper(context);
 			db = dbHelper.getWritableDatabase();
+			emptyName = false;
 		}
 		if (db == null) {
 			try {
 				PrintWriter outPrintWriter = res.getWriter();
 				outPrintWriter.println("db is null");
+				if (!emptyName) {
+					outPrintWriter.println("Not empty table name");
+				}
 				outPrintWriter.flush();
 				return;
 			} catch (IOException e) {
