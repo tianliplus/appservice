@@ -17,6 +17,7 @@ public class SeatDBHelper extends SQLiteOpenHelper {
 	private static final String SQL_CREATE_ENTRIES = "CREATE TABLE "
 			+ TABLE_NAME + " (" + SEAT_ID_COL + " INTEGER PRIMARY KEY, "
 			+ READY_STATUS_COL + " INTEGER)";
+
 	private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS "
 			+ TABLE_NAME;
 
@@ -26,7 +27,8 @@ public class SeatDBHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(SQL_CREATE_ENTRIES);
+		String createString = "CREATE TABLE seat (seatid integer primary key, readystatus text)";
+		db.execSQL(createString);
 	}
 
 	@Override
