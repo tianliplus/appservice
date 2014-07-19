@@ -109,6 +109,7 @@ public class AdminService extends BaseService {
 		for (int i = 0; i < vals.length - 1; i++) {
 			sqlString += vals[i] + ',';
 		}
+		sqlString += vals[vals.length - 1] + ")";
 		db.execSQL(sqlString);
 
 	}
