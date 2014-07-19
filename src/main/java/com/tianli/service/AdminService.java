@@ -70,7 +70,7 @@ public class AdminService extends BaseService {
 		return list;
 	}
 
-	public void doInsert(String colString, String valString) {
+	public long doInsert(String colString, String valString) {
 		SQLiteDatabase db = null;
 		boolean emptyName = true;
 		if (tableName.equalsIgnoreCase(SeatDBHelper.TABLE_NAME)) {
@@ -93,7 +93,7 @@ public class AdminService extends BaseService {
 					outPrintWriter.println("Empty name:" + tableName);
 				}
 				outPrintWriter.flush();
-				return;
+				return -1;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -106,7 +106,7 @@ public class AdminService extends BaseService {
 		for (int i = 0; i < cols.length; i++) {
 			values.put(cols[i], vals[i]);
 		}
-		db.insert(tableName, null, values);
+		return db.insert(tableName, null, values);
 
 	}
 }

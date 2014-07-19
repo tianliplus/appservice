@@ -80,7 +80,8 @@ public class AdminServlet extends HttpServlet {
 				// -----Insertion-----
 				String colString = request.getParameter("cols");
 				String valString = request.getParameter("vals");
-				service.doInsert(colString, valString);
+				long ins = service.doInsert(colString, valString);
+				res.message = "" + ins;
 				break;
 			default:
 				break;
