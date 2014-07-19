@@ -88,6 +88,8 @@ public class AdminService extends BaseService {
 				outPrintWriter.println("db is null");
 				if (!emptyName) {
 					outPrintWriter.println("Not empty table name");
+				} else {
+					outPrintWriter.println("Empty name:" + tableName);
 				}
 				outPrintWriter.flush();
 				return;
