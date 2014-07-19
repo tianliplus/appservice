@@ -7,9 +7,20 @@ import java.util.Map;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.tianli.dataobject.UserDO;
 import com.tianli.dbhelper.UserDBHelper;
 
 public class UserDAO {
+
+	private Context androidContext;
+
+	public UserDAO() {
+	}
+
+	public UserDAO(Context context) {
+		androidContext = context;
+	}
+
 	public String[] getClientsIp(Context context) {
 		UserDBHelper mDbHelper = new UserDBHelper(context);
 		SQLiteDatabase db = mDbHelper.getReadableDatabase();
@@ -39,5 +50,12 @@ public class UserDAO {
 			result.put(seatID, userName);
 		}
 		return result;
+	}
+
+	public int getSeatByIp(Context context, String ip) {
+		UserDBHelper mDbHelper = new UserDBHelper(context);
+		SQLiteDatabase db = mDbHelper.getReadableDatabase();
+		UserDO userDO = mDbHelper.select(db, UserDBHelper.IP_COL + ip);
+		return userDO.seatId;
 	}
 }
