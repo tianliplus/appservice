@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -61,6 +62,15 @@ public class AdminDBHelper extends SQLiteOpenHelper {
 			list.add(map);
 		}
 		return list;
+	}
+
+	public long insert(SQLiteDatabase db, String[] cols, String[] vals) {
+		ContentValues values = new ContentValues();
+		for (int i = 0; i < cols.length; i++) {
+			values.put(cols[i], vals[i]);
+		}
+		long c = db.insert(TABLE_NAME, null, values);
+		return c;
 	}
 
 	public void clearData(SQLiteDatabase db) {

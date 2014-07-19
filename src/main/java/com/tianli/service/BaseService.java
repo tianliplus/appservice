@@ -7,6 +7,8 @@ public class BaseService {
 	HttpServletRequest req;
 	HttpServletResponse res;
 
+	public BaseService() {
+	}
 	public BaseService(HttpServletRequest request, HttpServletResponse response) {
 		this.req = request;
 		this.res = response;

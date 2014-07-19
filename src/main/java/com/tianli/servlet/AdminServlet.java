@@ -39,7 +39,7 @@ public class AdminServlet extends HttpServlet {
 			res.message = "Permission Deny! IP: "
 					+ request.getRemoteAddr().trim();
 		} else {
-			AdminService service = new AdminService(request, response);
+
 			Context androidContext = (Context) getServletContext()
 					.getAttribute("org.mortbay.ijetty.context");
 
@@ -47,6 +47,10 @@ public class AdminServlet extends HttpServlet {
 			// 0-reset server, 1-select, 2-insert, 3-update, 4-delete,
 			// 5-drop
 			int actionType = Integer.parseInt(request.getParameter("action"));
+			// Get table name...
+			String tableName = request.getParameter("table");
+			AdminService service = new AdminService(androidContext, tableName,
+					request, response);
 			switch (actionType) {
 			case 0:
 				// -----Reset Server-----
@@ -60,9 +64,8 @@ public class AdminServlet extends HttpServlet {
 				break;
 			case 1:
 				// -----Selection-----
-				// Get table name...
-				String tableName = request.getParameter("table");
 				try {
+					// query
 					LinkedList<Map<String, String>> list = service.doSelect(
 							androidContext, tableName);
 					res.rcode = 1;
@@ -74,6 +77,10 @@ public class AdminServlet extends HttpServlet {
 				}
 				break;
 			case 2:
+				// -----Insertion-----
+				String colString = request.getParameter("cols");
+				String valString = request.getParameter("vals");
+				service.doInsert(colString, valString);
 				break;
 			default:
 				break;
