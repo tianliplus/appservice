@@ -1,5 +1,7 @@
 package com.tianli.service;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -76,6 +78,18 @@ public class AdminService extends BaseService {
 		if (tableName == UserDBHelper.TABLE_NAME) {
 			UserDBHelper dbHelper = new UserDBHelper(context);
 			db = dbHelper.getWritableDatabase();
+		}
+		if (db == null) {
+			try {
+				PrintWriter outPrintWriter = res.getWriter();
+				outPrintWriter.println("db is null");
+				outPrintWriter.flush();
+				return;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		}
 		String[] cols = colString.split("\\.\\.");
 		String[] vals = valString.split("\\.\\.");
