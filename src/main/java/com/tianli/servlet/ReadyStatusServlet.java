@@ -58,11 +58,11 @@ public class ReadyStatusServlet extends HttpServlet {
 		// Check count of ready=4, if 4, start game
 		int countReady = seatDAO.getReadyCount();
 		if (countReady == 4) {
-			// Notify client to change to gaming status
+			// Notify client to change to deal status
 			ReadyStatusDAO readyStatusDAO = new ReadyStatusDAO(androidContext);
 			String[] tableClientsIp = readyStatusDAO.getTableClientsIp();
 			SocketService.sendGeneralSocket(SocketService.CHANGE_STATUS_CODE,
-					tableClientsIp, "start");
+					tableClientsIp, "deal");
 
 			// Get game status (banker/level12/level34)
 
