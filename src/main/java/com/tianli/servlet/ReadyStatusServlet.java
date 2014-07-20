@@ -55,7 +55,7 @@ public class ReadyStatusServlet extends HttpServlet {
 		// Respond to client status changed
 		// Check count of ready=0, if 0, start game
 		int countUnready = seatDAO.getUnreadyCount();
-		if (countUnready == 0) {
+		if (countUnready == 4) {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
