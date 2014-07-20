@@ -10,14 +10,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.tianli.dataobject.UserDO;
-import com.tianli.dbhelper.ShengjiContract.SeatEntry;
 import com.tianli.dbhelper.ShengjiContract.UserEntry;
 import com.tianli.dbhelper.ShengjiDbHelper;
 
 public class UserDAO {
 
 	private Context androidContext;
-	private final String tableName = SeatEntry.TABLE_NAME;
+	private final String tableName = UserEntry.TABLE_NAME;
 
 
 	public UserDAO(Context context) {
