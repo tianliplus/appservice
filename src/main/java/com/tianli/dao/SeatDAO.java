@@ -32,7 +32,10 @@ public class SeatDAO {
 		String where = SeatEntry.READY_STATUS_COL + "=?";
 		String[] arg = { "1" };
 		Cursor cursor = db.query(tableName, cols, where, arg, null, null, null);
-		int count = cursor.getInt(0);
+		int count = -1;
+		if (cursor.moveToFirst()) {
+			count = cursor.getInt(0);
+		}
 		return count;
 	}
 }
