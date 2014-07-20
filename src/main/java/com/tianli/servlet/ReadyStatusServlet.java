@@ -55,19 +55,14 @@ public class ReadyStatusServlet extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 		writer.println(gson.toJson(result));
 		// Respond to client status changed
-		// Check count of ready=0, if 0, start game
-		int countUnready = seatDAO.getUnreadyCount();
-		if (countUnready == 4) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+		// Check count of ready=4, if 4, start game
+		int countReady = seatDAO.getReadyCount();
+		if (countReady == 4) {
 			// Notify client to change to gaming status
 			ReadyStatusDAO readyStatusDAO = new ReadyStatusDAO(androidContext);
 			String[] tableClientsIp = readyStatusDAO.getTableClientsIp();
-			SocketService.sendGeneralSocket(SocketService.START_GAME_CODE,
-					tableClientsIp, "");
+			SocketService.sendGeneralSocket(SocketService.CHANGE_STATUS_CODE,
+					tableClientsIp, "start");
 
 			// Get game status (banker/level12/level34)
 

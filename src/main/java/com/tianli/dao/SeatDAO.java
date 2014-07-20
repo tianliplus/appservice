@@ -25,7 +25,7 @@ public class SeatDAO {
 		return db.update(tableName, values, SeatEntry.SEAT_ID_COL + "=?", arg);
 	}
 
-	public int getUnreadyCount() {
+	public int getReadyCount() {
 		ShengjiDbHelper dbHelper = new ShengjiDbHelper(androidContext);
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		String[] cols = { "count(*)" };
