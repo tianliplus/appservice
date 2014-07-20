@@ -77,8 +77,8 @@ public class SeatServlet extends HttpServlet {
 		String message = parseSeatStatus(seatStatus);
 		String[] clientsIp = userDAO.getClientsIp();
 		// Broadcast to all clients
-		SocketService service = new SocketService();
-		service.sendGeneralSocket(SocketService.SEAT_CODE, clientsIp, message);
+		SocketService.sendGeneralSocket(SocketService.SEAT_CODE, clientsIp,
+				message);
 
 		Gson gson = new Gson();
 		PrintWriter out = response.getWriter();

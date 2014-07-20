@@ -6,18 +6,17 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class SocketService {
-	public int port = 8821;
+	public final static int port = 8821;
 	public final static String MSG_CODE = "0001";
 	public final static String SEAT_CODE = "0002";
+	public final static String START_GAME_CODE = "0003";
 
-	public void sendMessage(String[] clientIp, String message) {
-		String cmd = MSG_CODE + message;
-		for (String ip : clientIp) {
-			sendToIp(ip, cmd);
-		}
+	public static void sendMessage(String[] clientIp, String message) {
+		sendGeneralSocket(MSG_CODE, clientIp, message);
 	}
 
-	public void sendGeneralSocket(String code, String[] clientIp, String message) {
+	public static void sendGeneralSocket(String code, String[] clientIp,
+			String message) {
 		String cmd = code + message;
 
 		for (String ip : clientIp) {
@@ -25,7 +24,7 @@ public class SocketService {
 		}
 	}
 
-	private void sendToIp(String ip, String cmd) {
+	private static void sendToIp(String ip, String cmd) {
 		Socket socket = null;
 		OutputStream outputStream = null;
 		try {
@@ -51,6 +50,5 @@ public class SocketService {
 			}
 		}
 	}
-
 
 }

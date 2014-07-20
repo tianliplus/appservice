@@ -48,8 +48,7 @@ public class TextServlet extends HttpServlet {
 			// build text
 			String message = userName + ',' + text;
 			// send by socket
-			SocketService service = new SocketService();
-			service.sendMessage(clientsIp, message);
+			SocketService.sendMessage(clientsIp, message);
 		} catch (Exception e) {
 			baseResult.message = e.getMessage();
 		}

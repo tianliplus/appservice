@@ -9,6 +9,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.tianli.dbhelper.ShengjiContract.RoundStatusEntry;
+import com.tianli.dbhelper.ShengjiContract.GameStatusEntry;
 import com.tianli.dbhelper.ShengjiContract.SeatEntry;
 import com.tianli.dbhelper.ShengjiContract.UserEntry;
 import com.tianli.dbhelper.ShengjiDbHelper;
@@ -23,13 +25,40 @@ public class AdminDAO {
 
 	public void clearData() {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		// Delete all user
+		// Delete all user EXCETP host
 		String[] args = { "127.0.0.1" };
 		db.delete(UserEntry.TABLE_NAME, "ip<>?", args);
-		// Set all seat to status 0
-		ContentValues values = new ContentValues();
-		values.put(SeatEntry.READY_STATUS_COL, 0);
-		db.update(SeatEntry.TABLE_NAME, values, null, null);
+
+		// Delete all seat status
+		db.delete(SeatEntry.TABLE_NAME, null, null);
+		// Insert all seat to status 0
+		for (int i = 1; i <= 4; i++) {
+			ContentValues seat = new ContentValues();
+			seat.put(SeatEntry.SEAT_ID_COL, 1);
+			seat.put(SeatEntry.READY_STATUS_COL, 0);
+			db.insert(SeatEntry.TABLE_NAME, null, seat);
+		}
+
+		// Delete game status
+		db.delete(GameStatusEntry.TABLE_NAME, null, null);
+		// Reset game status
+		ContentValues gameValues = new ContentValues();
+		gameValues.put(GameStatusEntry.BANKER_SEAT_COL, 0);
+		gameValues.put(GameStatusEntry.LEVEL_COL_1, 2);
+		gameValues.put(GameStatusEntry.LEVEL_COL_2, 2);
+		db.insert(GameStatusEntry.TABLE_NAME, null, gameValues);
+
+		// Delete current status
+		db.delete(RoundStatusEntry.TABLE_NAME, null, null);
+		// Reset current status
+		ContentValues currentValues = new ContentValues();
+		currentValues.put(RoundStatusEntry.BANKER_SEAT_COL, 0);
+		currentValues.put(RoundStatusEntry.ROUND_LEVEL_COL, 2);
+		currentValues.put(RoundStatusEntry.SCORE_COL, 0);
+		currentValues.put(RoundStatusEntry.MAIN_COLOR_COL, 0);
+		currentValues.put(RoundStatusEntry.SHOW_MAIN_IP_COL, "");
+		currentValues.put(RoundStatusEntry.SHOW_MAIN_CATEGORY, 0);
+		db.insert(RoundStatusEntry.TABLE_NAME, null, currentValues);
 	}
 
 	public LinkedList<Map<String, String>> select(String tableName, String col,

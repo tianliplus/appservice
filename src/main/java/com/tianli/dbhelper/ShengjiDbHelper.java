@@ -9,6 +9,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.tianli.dbhelper.ShengjiContract.RoundStatusEntry;
+import com.tianli.dbhelper.ShengjiContract.GameStatusEntry;
 import com.tianli.dbhelper.ShengjiContract.SeatEntry;
 import com.tianli.dbhelper.ShengjiContract.UserEntry;
 
@@ -25,12 +27,16 @@ public class ShengjiDbHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(UserEntry.SQL_CREATE);
 		db.execSQL(SeatEntry.SQL_CREATE);
+		db.execSQL(GameStatusEntry.SQL_CREATE);
+		db.execSQL(RoundStatusEntry.SQL_CREATE);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
 		db.execSQL(UserEntry.SQL_DELETE);
 		db.execSQL(SeatEntry.SQL_DELETE);
+		db.execSQL(GameStatusEntry.SQL_DELETE);
+		db.execSQL(RoundStatusEntry.SQL_DELETE);
 		onCreate(db);
 	}
 

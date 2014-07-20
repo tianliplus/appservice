@@ -41,8 +41,7 @@ public class InitServlet extends HttpServlet {
 			String message = parseSeatStatus(seatStatus);
 			String[] clientsIp = { request.getRemoteAddr().trim() };
 			// Broadcast to all clients
-			SocketService service = new SocketService();
-			service.sendGeneralSocket(SocketService.SEAT_CODE, clientsIp,
+			SocketService.sendGeneralSocket(SocketService.SEAT_CODE, clientsIp,
 					message);
 			return;
 		}

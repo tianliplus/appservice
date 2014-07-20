@@ -11,9 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.tianli.dao.ReadyStatusDAO;
 import com.tianli.dao.SeatDAO;
 import com.tianli.dao.UserDAO;
 import com.tianli.result.BaseResult;
+import com.tianli.service.SocketService;
 
 /**
  * Servlet implementation class ReadyStatusServlet
@@ -62,6 +64,10 @@ public class ReadyStatusServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 			// Notify client to change to gaming status
+			ReadyStatusDAO readyStatusDAO = new ReadyStatusDAO(androidContext);
+			String[] tableClientsIp = readyStatusDAO.getTableClientsIp();
+			SocketService.sendGeneralSocket(SocketService.START_GAME_CODE,
+					tableClientsIp, "");
 
 			// Get game status (banker/level12/level34)
 
@@ -70,7 +76,6 @@ public class ReadyStatusServlet extends HttpServlet {
 			 * (maincolor/banker/currentlevel/score/bottomcards)
 			 */
 
-			// Tell banker to ask for dealing
 		}
 	}
 
