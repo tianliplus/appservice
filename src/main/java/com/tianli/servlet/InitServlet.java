@@ -10,12 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.google.gson.Gson;
 import com.tianli.dao.UserDAO;
 import com.tianli.dataobject.UserDO;
-import com.tianli.dbhelper.UserDBHelper;
 import com.tianli.result.BaseResult;
 import com.tianli.service.SocketService;
 
@@ -24,22 +22,22 @@ import com.tianli.service.SocketService;
  */
 public class InitServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public InitServlet() {
-        super();
-    }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public InitServlet() {
+		super();
+	}
+
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		String seat = request.getParameter("seat");
 		if (null != seat && seat.equals("1")) {
 			Context androidContext = (Context) getServletContext()
 					.getAttribute("org.mortbay.ijetty.context");
-			UserDAO userDAO = new UserDAO();
-			Map<Integer, String> seatStatus = userDAO
-					.getSeatStatus(androidContext);
+			UserDAO userDAO = new UserDAO(androidContext);
+			Map<Integer, String> seatStatus = userDAO.getSeatStatus();
 			String message = parseSeatStatus(seatStatus);
 			String[] clientsIp = { request.getRemoteAddr().trim() };
 			// Broadcast to all clients
@@ -57,10 +55,10 @@ public class InitServlet extends HttpServlet {
 			userDo.ip = request.getRemoteAddr().trim();
 			Context androidContext = (Context) getServletContext()
 					.getAttribute("org.mortbay.ijetty.context");
-			UserDBHelper mDbHelper = new UserDBHelper(androidContext);
-			SQLiteDatabase db = mDbHelper.getWritableDatabase();
+			UserDAO userDAO = new UserDAO(androidContext);
 
-			mDbHelper.insert(db, userDo);
+			userDAO.insert(userDo);
+
 			result.rcode = 1;
 		}
 		Gson gson = new Gson();
@@ -82,10 +80,13 @@ public class InitServlet extends HttpServlet {
 		}
 		return sb.toString();
 	}
+
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 	}
 
 }

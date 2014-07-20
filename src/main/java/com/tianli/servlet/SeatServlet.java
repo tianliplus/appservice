@@ -10,12 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.google.gson.Gson;
 import com.tianli.dao.UserDAO;
 import com.tianli.dataobject.UserDO;
-import com.tianli.dbhelper.UserDBHelper;
+import com.tianli.dbhelper.ShengjiContract.UserEntry;
 import com.tianli.result.LoginResult;
 import com.tianli.service.SocketService;
 
@@ -47,26 +46,25 @@ public class SeatServlet extends HttpServlet {
 		// Obtain database object
 		Context androidContext = (Context) getServletContext().getAttribute(
 				"org.mortbay.ijetty.context");
-		UserDBHelper mDbHelper = new UserDBHelper(androidContext);
-		SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+		UserDAO userDAO = new UserDAO(androidContext);
 		// Get user info
 		UserDO userDo = new UserDO();
 		userDo.userName = request.getParameter("username").trim();
 		userDo.seatId = Integer.parseInt(request.getParameter("seatid"));
 		userDo.ip = request.getRemoteAddr().trim();
 		// Get user at seat info
-		UserDO userAtSeatDo = mDbHelper.select(db, UserDBHelper.SEAT_ID_COL
-				+ "='" + userDo.seatId + "'");
-		String[] args = { userDo.ip };
+		UserDO userAtSeatDo = userDAO.select(UserEntry.SEAT_ID_COL + "='"
+				+ userDo.seatId + "'");
 		// -----If the seat is empty-----
 		if (userAtSeatDo.id == -1) {
-			mDbHelper.updateSeat(db, userDo);
+			userDAO.updateSeat(userDo);
 		} else {
 			// -----If the seat is not empty-----
 			// -----If it is himself, then he get up-----
 			if (userDo.ip.equalsIgnoreCase(userAtSeatDo.ip)) {
 				userDo.seatId = 0;
-				mDbHelper.updateSeat(db, userDo);
+				userDAO.updateSeat(userDo);
 			} else {
 				// If it is someelse
 				// return error
@@ -75,10 +73,9 @@ public class SeatServlet extends HttpServlet {
 			}
 		}
 		// Get seat status
-		UserDAO userDAO = new UserDAO();
-		Map<Integer, String> seatStatus = userDAO.getSeatStatus(androidContext);
+		Map<Integer, String> seatStatus = userDAO.getSeatStatus();
 		String message = parseSeatStatus(seatStatus);
-		String[] clientsIp = userDAO.getClientsIp(androidContext);
+		String[] clientsIp = userDAO.getClientsIp();
 		// Broadcast to all clients
 		SocketService service = new SocketService();
 		service.sendGeneralSocket(SocketService.SEAT_CODE, clientsIp, message);

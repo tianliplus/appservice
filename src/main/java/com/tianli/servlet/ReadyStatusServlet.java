@@ -39,12 +39,12 @@ public class ReadyStatusServlet extends HttpServlet {
 		}
 		Context androidContext = (Context) getServletContext().getAttribute(
 				"org.mortbay.ijetty.context");
-		UserDAO userDAO = new UserDAO();
+		UserDAO userDAO = new UserDAO(androidContext);
 		SeatDAO seatDAO = new SeatDAO(androidContext);
 		// Get client ip
 		String ip = request.getRemoteAddr().trim();
 		// Get seatId by ip
-		int seatId = userDAO.getSeatByIp(androidContext, ip);
+		int seatId = userDAO.getSeatByIp(ip);
 		// Set ready status
 		seatDAO.setReadyStatus(seatId, Integer.valueOf(status));
 		// Notify client

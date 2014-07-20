@@ -2,8 +2,6 @@ package com.tianli.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.LinkedList;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,10 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.google.gson.Gson;
-import com.tianli.dbhelper.SeatDBHelper;
 import com.tianli.result.AdminDbResult;
 import com.tianli.service.AdminService;
 
@@ -34,9 +30,10 @@ public class AdminServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		AdminDbResult res = new AdminDbResult();
+		AdminDbResult res = null;
 		// Check if admin
 		if (!"127.0.0.1".equals(request.getRemoteAddr().trim())) {
+			res = new AdminDbResult();
 			res.rcode = -1;
 			res.message = "Permission Deny! IP: "
 					+ request.getRemoteAddr().trim();
@@ -56,38 +53,15 @@ public class AdminServlet extends HttpServlet {
 			switch (actionType) {
 			case 0:
 				// -----Reset Server-----
-				if (service.doReset(androidContext)) {
-					res.rcode = 1;
-					res.adminresult = "All data cleared.";
-				} else {
-					res.rcode = -1;
-					res.message = "Unknown error.";
-				}
+				res = service.doReset();
 				break;
 			case 1:
 				// -----Selection-----
-				try {
-					// query
-					LinkedList<Map<String, String>> list = service.doSelect(
-							androidContext, tableName);
-					res.rcode = 1;
-					res.adminresult = (list.size() != 0) ? list
-							: "Empty table.";
-				} catch (Exception e) {
-					res.rcode = -1;
-					res.message = "Error: " + e.getMessage();
-				}
+				res = service.doSelect(tableName);
 				break;
 			case 2:
 				// -----Insertion-----
-				String colString = request.getParameter("cols");
-				String valString = request.getParameter("vals");
-				service.doInsert(colString, valString);
-
-			case 8:
-				SeatDBHelper dbHelper = new SeatDBHelper(androidContext);
-				SQLiteDatabase db = dbHelper.getWritableDatabase();
-				db.execSQL("insert into seat values(1,0)");
+				res = service.doInsert(tableName);
 				break;
 			default:
 				break;

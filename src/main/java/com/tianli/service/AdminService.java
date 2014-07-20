@@ -1,7 +1,5 @@
 package com.tianli.service;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -9,26 +7,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 
-import com.tianli.dbhelper.AdminDBHelper;
-import com.tianli.dbhelper.SeatDBHelper;
-import com.tianli.dbhelper.UserDBHelper;
+import com.tianli.dao.AdminDAO;
+import com.tianli.result.AdminDbResult;
 
 public class AdminService extends BaseService {
 
-	Context context;
+	Context androidContext;
 	String tableName;
 
 	public AdminService(Context context, String tableName) {
-		this.context = context;
+		this.androidContext = context;
 		this.tableName = tableName;
 	}
 
 	public AdminService(Context context, String tableName,
 			HttpServletRequest request, HttpServletResponse response) {
 		super(request, response);
-		this.context = context;
+		this.androidContext = context;
 		this.tableName = tableName;
 	}
 
@@ -36,81 +32,63 @@ public class AdminService extends BaseService {
 		super(request, response);
 	}
 
-	public boolean doReset(Context androidContext) {
-		String[] tableNames = { UserDBHelper.TABLE_NAME };
+	public AdminDbResult doReset() {
+		AdminDbResult result = new AdminDbResult();
 		try {
-			for (String tableName : tableNames) {
-				AdminDBHelper mDbHelper = new AdminDBHelper(androidContext,
-						tableName);
-				SQLiteDatabase db = mDbHelper.getWritableDatabase();
-				mDbHelper.clearData(db);
-			}
-			return true;
+			AdminDAO adminDAO = new AdminDAO(androidContext);
+			adminDAO.clearData();
+			result.rcode = 1;
+			result.adminresult = "All data cleared.";
 		} catch (Exception e) {
-			return false;
+			result.rcode = -1;
+			result.message = "Error: " + e.getMessage();
 		}
+		return result;
 	}
 
-	public LinkedList<Map<String, String>> doSelect(Context androidContext,
-			String tableName) {
-		AdminDBHelper mDbHelper = new AdminDBHelper(androidContext, tableName);
-		SQLiteDatabase db = mDbHelper.getReadableDatabase();
-		// Get request parameters
-		String col = req.getParameter("col");
-		String sel = req.getParameter("sel");
-		String arg = req.getParameter("arg");
-		String group = req.getParameter("group");
-		String having = req.getParameter("having");
-		String order = req.getParameter("order");
-		String limit = req.getParameter("limit");
-		// Search
-		LinkedList<Map<String, String>> list = mDbHelper.select(db, col, sel,
-				arg, group, having, order, limit);
-		return list;
+	public AdminDbResult doSelect(String tableName) {
+		AdminDbResult result = new AdminDbResult();
+		try {
+			AdminDAO adminDAO = new AdminDAO(androidContext);
+			String col = req.getParameter("col");
+			String sel = req.getParameter("sel");
+			String arg = req.getParameter("arg");
+			String group = req.getParameter("group");
+			String having = req.getParameter("having");
+			String order = req.getParameter("order");
+			String limit = req.getParameter("limit");
+			LinkedList<Map<String, String>> list = adminDAO.select(tableName,
+					col, sel, arg, group, having, order, limit);
+			result.rcode = 1;
+			result.adminresult = (list.size() != 0) ? list : "Empty table.";
+		} catch (Exception e) {
+			result.rcode = -1;
+			result.message = "Error: " + e.getMessage();
+		}
+		return result;
+
 	}
 
-	public void doInsert(String colString, String valString) {
-		SQLiteDatabase db = null;
-		boolean emptyName = true;
-		if (tableName.equalsIgnoreCase(SeatDBHelper.TABLE_NAME)) {
-			SeatDBHelper dbHelper = new SeatDBHelper(context);
-			db = dbHelper.getWritableDatabase();
-			emptyName = false;
-		}
-		if (tableName.equalsIgnoreCase(UserDBHelper.TABLE_NAME)) {
-			UserDBHelper dbHelper = new UserDBHelper(context);
-			db = dbHelper.getWritableDatabase();
-			emptyName = false;
-		}
-		if (db == null) {
-			try {
-				PrintWriter outPrintWriter = res.getWriter();
-				outPrintWriter.println("db is null");
-				if (!emptyName) {
-					outPrintWriter.println("Not empty table name");
-				} else {
-					outPrintWriter.println("Empty name:" + tableName);
-				}
-				outPrintWriter.flush();
-				return;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	public AdminDbResult doInsert(String tableName) {
+		AdminDbResult result = new AdminDbResult();
 
-		}
-		String[] cols = colString.split("\\.\\.");
-		String[] vals = valString.split("\\.\\.");
-		String sqlString = "insert into " + tableName + " (";
-		for (int i = 0; i < cols.length - 1; i++) {
-			sqlString += cols[i] + ',';
-		}
-		sqlString += cols[cols.length - 1] + ") values(";
-		for (int i = 0; i < vals.length - 1; i++) {
-			sqlString += vals[i] + ',';
-		}
-		sqlString += vals[vals.length - 1] + ")";
-		db.execSQL(sqlString);
+		try {
+			AdminDAO adminDAO = new AdminDAO(androidContext);
 
+			String colString = req.getParameter("cols");
+			String valString = req.getParameter("vals");
+			String[] cols = colString.split("\\.\\.");
+			String[] vals = valString.split("\\.\\.");
+
+			long idx = adminDAO.insert(tableName, cols, vals);
+			result.rcode = 1;
+			result.adminresult = "Item inserted: Table " + tableName
+					+ ", index " + idx;
+
+		} catch (Exception e) {
+			result.rcode = -1;
+			result.message = "Error: " + e.getMessage();
+		}
+		return result;
 	}
 }

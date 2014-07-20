@@ -4,35 +4,39 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class AdminDBHelper extends SQLiteOpenHelper {
+import com.tianli.dbhelper.ShengjiContract.SeatEntry;
+import com.tianli.dbhelper.ShengjiContract.UserEntry;
+
+public class ShengjiDbHelper extends SQLiteOpenHelper {
 
 	public static final String DATABASE_NAME = "shengji.db";
 	public static final int DATABASE_VERSION = 1;
 
-	private String TABLE_NAME = "";
-
-	public AdminDBHelper(Context context, String tableName) {
+	public ShengjiDbHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
-		TABLE_NAME = tableName;
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+		db.execSQL(UserEntry.SQL_CREATE);
+		db.execSQL(SeatEntry.SQL_CREATE);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
+		db.execSQL(UserEntry.SQL_DELETE);
+		db.execSQL(SeatEntry.SQL_DELETE);
+		onCreate(db);
 	}
 
 	public LinkedList<Map<String, String>> select(SQLiteDatabase db,
-			String col, String sel, String arg, String group, String having,
-			String order, String limit) {
+			String tableName, String col, String sel, String arg, String group,
+			String having, String order, String limit) {
 		String[] columns = null;
 		String[] args = null;
 		if (null != col) {
@@ -41,7 +45,7 @@ public class AdminDBHelper extends SQLiteOpenHelper {
 		if (null != arg) {
 			args = arg.split("\\.\\.");
 		}
-		Cursor c = db.query(TABLE_NAME, columns, sel, args, group, having,
+		Cursor c = db.query(tableName, columns, sel, args, group, having,
 				order, limit);
 		String[] colNames = c.getColumnNames();
 		LinkedList<Map<String, String>> list = new LinkedList<Map<String, String>>();
@@ -62,18 +66,5 @@ public class AdminDBHelper extends SQLiteOpenHelper {
 			list.add(map);
 		}
 		return list;
-	}
-
-	public long insert(SQLiteDatabase db, String[] cols, String[] vals) {
-		ContentValues values = new ContentValues();
-		for (int i = 0; i < cols.length; i++) {
-			values.put(cols[i], vals[i]);
-		}
-		long c = db.insert(TABLE_NAME, null, values);
-		return c;
-	}
-
-	public void clearData(SQLiteDatabase db) {
-		db.delete(TABLE_NAME, null, null);
 	}
 }

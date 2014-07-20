@@ -37,12 +37,12 @@ public class TestServlet extends HttpServlet {
 			Context androidContext = (Context) getServletContext()
 					.getAttribute("org.mortbay.ijetty.context");
 
-			UserDAO userDAO = new UserDAO();
+			UserDAO userDAO = new UserDAO(androidContext);
 
 			String userName = request.getParameter("username");
 			String text = request.getParameter("text");
 			// get logged user ip
-			String[] clientsIp = userDAO.getClientsIp(androidContext);
+			String[] clientsIp = userDAO.getClientsIp();
 			// build text
 			// next line is for test use
 			userName = "socket";
